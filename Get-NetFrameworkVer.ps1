@@ -1,4 +1,17 @@
-[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+add-type @"
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+public class TrustAllCertsPolicy : ICertificatePolicy {
+    public bool CheckValidationResult(
+        ServicePoint srvPoint, X509Certificate certificate,
+        WebRequest request, int certificateProblem) {
+        return true;
+    }
+}
+"@
+$AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 
 $release = Get-ItemPropertyValue -LiteralPath 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release
 switch ($release) {
@@ -21,5 +34,3 @@ if ($version) {
 } else {
     Write-Host -Object '.NET Framework Version 4.5 or later is not detected.'
 }
-
-#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
