@@ -11,9 +11,7 @@ add-type @"
 "@
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 
-#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
- 
- $release = Get-ItemPropertyValue -LiteralPath 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release
+$release = Get-ItemPropertyValue -LiteralPath 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release
 switch ($release) {
     { $_ -ge 533320 } { $version = '4.8.1 or later'; break }
     { $_ -ge 528040 } { $version = '4.8'; break }
@@ -34,3 +32,5 @@ if ($version) {
 } else {
     Write-Host -Object '.NET Framework Version 4.5 or later is not detected.'
 }
+
+#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
