@@ -1,4 +1,6 @@
-﻿$release = Get-ItemPropertyValue -LiteralPath 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
+ 
+ $release = Get-ItemPropertyValue -LiteralPath 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release
 switch ($release) {
     { $_ -ge 533320 } { $version = '4.8.1 or later'; break }
     { $_ -ge 528040 } { $version = '4.8'; break }
